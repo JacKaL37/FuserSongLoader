@@ -474,7 +474,6 @@ void CreateUnlockPak() {
 	if (fs::exists(custom_songs)) {
 		std::unordered_set<std::string> songNames;
 		bool needRewrite = false;
-
 		for (auto& dirEntry : fs::recursive_directory_iterator(custom_songs)) {
 			if (dirEntry.is_regular_file()) {
 				auto pakName = dirEntry.path().stem().string();
@@ -487,6 +486,7 @@ void CreateUnlockPak() {
 				}
 			}
 		}
+		std::unordered_set<std::string> eventRewards = {"justabouttosnap", "thisonenotthatone", "sillybros", "abileneanddown", "breakforme", "fermionic", "lovetheme", "parabola", "slackjaw", "strychninebaby", "takeu4aride", "looppack02", "looppack03", "looppack04", "looppack05", "looppack06", "dexting", "hardlight", "hartand12th", "thatunbearable", "larrysplace", "deadmetrocard", "parlayed", "moonlab", "findyou", "ifyougetdown", "watchyourstep", "barcoded", "laserdome", "grimetime", "betterwakeup", "somatic", "submerged"};
 
 		if (needRewrite) {
 			printf("Found new custom songs! Creating customSongsUnlocked_P.pak to unlock them...\n");
@@ -535,6 +535,7 @@ void CreateUnlockPak() {
 					cat->entries[bornthiswayEntryId].serialize(entryCloneBuffer);
 				}
 
+				
 				//For each custom song, use the cloned row to add an entry that unlocks the song at no cost
 				for (auto &&songName : songNames) {
 					DataTableCategory::Entry e;
@@ -548,6 +549,53 @@ void CreateUnlockPak() {
 						DataBuffer entryCloneBuffer;
 						entryCloneBuffer.ctx_ = &ctx;
 						entryCloneBuffer.setupVector(cloneData);
+
+						e.serialize(entryCloneBuffer);
+					}
+
+					printf("Creating entry for %s\n", songName.c_str());
+					e.rowName = data.header->findOrCreateName(songName);
+					std::get<NameProperty>(std::get<IPropertyDataList*>(e.value.values[0]->v)->get(data.header->findName("unlockName"))->value).name = e.rowName;
+					std::get<PrimitiveProperty<i32>>(std::get<IPropertyDataList*>(e.value.values[0]->v)->get(data.header->findName("audioCreditsCost"))->value).data = 0;
+
+					cat->entries.emplace_back(std::move(e));
+				}
+				//Find and clone the row for "cancionporferrer"
+				std::vector<u8> cloneDataEvent;
+				{
+					AssetCtx ctx;
+					ctx.header = data.header;
+					ctx.parseHeader = false;
+					ctx.length = 0;
+
+					DataBuffer entryCloneBuffer;
+					entryCloneBuffer.ctx_ = &ctx;
+					entryCloneBuffer.loading = false;
+					entryCloneBuffer.setupVector(cloneDataEvent);
+
+					size_t cancionEntryId = 0;
+					for (auto&& e : cat->entries) {
+						if (e.rowName.getString(data.header) == "cancionporferrer") {
+							break;
+						}
+						cancionEntryId++;
+					}
+
+					cat->entries[cancionEntryId].serialize(entryCloneBuffer);
+				}
+				//EventRewards Test
+				for (auto&& songName : eventRewards) {
+					DataTableCategory::Entry e;
+					e.value.type.ref = cat->dataType.ref;
+					{
+						AssetCtx ctx;
+						ctx.header = data.header;
+						ctx.parseHeader = false;
+						ctx.length = 0;
+
+						DataBuffer entryCloneBuffer;
+						entryCloneBuffer.ctx_ = &ctx;
+						entryCloneBuffer.setupVector(cloneDataEvent);
 
 						e.serialize(entryCloneBuffer);
 					}
