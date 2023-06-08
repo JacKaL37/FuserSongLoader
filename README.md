@@ -10,15 +10,15 @@ This song loader works as a standalone DLL (`winhttp.dll`). It get loaded by Fus
 
 ### How to use it
 
-* Download the latest files from [the releases page](https://github.com/Mettra/FuserSongLoader/releases)
+* Download the latest files from [the releases page](https://github.com/NarrikSynthfox/FuserSongLoader/releases) 
 * Extract everything to the same directory as `Fuser-Win64-Shipping.exe`. (Should be somewhere like C:/Program Files (x86)/Steam/steamapps/common/Fuser/Fuser/Binaries/Win64)
 * Create a `custom_songs` folder in the content pak directory (Should be somewhere like C:/Program Files (x86)/Steam/steamapps/common/Fuser/Fuser/Content/Paks/)
-* Add any custom song .pak + .sig files to that directory. (These can be created with [Fuser Custom Song Creator](https://github.com/Mettra/FuserCustomSongCreator))
+* Add any custom song .pak + .sig files to that directory. (These can be created with [Fuser Custom Song Creator](https://github.com/NarrikSynthfox/FuserCustomSongCreator))
 
 ## Building
 
 ```bash
-git clone https://github.com/Mettra/FuserSongLoader.git
+git clone https://github.com/NarrikSynthfox/FuserSongLoader.git
 cd FuserSongLoader
 git submodule update --init --recursive
 ./build.bat
