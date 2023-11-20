@@ -575,7 +575,7 @@ void CreateUnlockPak() {
 
 					size_t cancionEntryId = 0;
 					for (auto&& e : cat->entries) {
-						if (e.rowName.getString(data.header) == "allstar") {
+						if (e.rowName.getString(data.header) == "cancionporferrer") {
 							break;
 						}
 						cancionEntryId++;
